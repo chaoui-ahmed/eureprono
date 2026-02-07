@@ -14,16 +14,199 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          id: string
+          username: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          id: string
+          username: string
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          id?: string
+          username?: string
+        }
+        Relationships: []
+      }
+      tip_comments: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          tip_id: string
+          user_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          tip_id: string
+          user_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          tip_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tip_comments_tip_id_fkey"
+            columns: ["tip_id"]
+            isOneToOne: false
+            referencedRelation: "tips"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tip_reactions: {
+        Row: {
+          created_at: string
+          id: string
+          reaction_type: string
+          tip_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          reaction_type?: string
+          tip_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          reaction_type?: string
+          tip_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tip_reactions_tip_id_fkey"
+            columns: ["tip_id"]
+            isOneToOne: false
+            referencedRelation: "tips"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tips: {
+        Row: {
+          analysis: string | null
+          bet_type: string
+          created_at: string
+          created_by: string
+          id: string
+          match_name: string
+          match_start_time: string
+          odds: number
+          sport: string
+          status: Database["public"]["Enums"]["tip_status"]
+          updated_at: string
+        }
+        Insert: {
+          analysis?: string | null
+          bet_type: string
+          created_at?: string
+          created_by: string
+          id?: string
+          match_name: string
+          match_start_time: string
+          odds: number
+          sport: string
+          status?: Database["public"]["Enums"]["tip_status"]
+          updated_at?: string
+        }
+        Update: {
+          analysis?: string | null
+          bet_type?: string
+          created_at?: string
+          created_by?: string
+          id?: string
+          match_name?: string
+          match_start_time?: string
+          odds?: number
+          sport?: string
+          status?: Database["public"]["Enums"]["tip_status"]
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_tracking: {
+        Row: {
+          created_at: string
+          id: string
+          stake: number
+          tip_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          stake: number
+          tip_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          stake?: number
+          tip_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_tracking_tip_id_fkey"
+            columns: ["tip_id"]
+            isOneToOne: false
+            referencedRelation: "tips"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "moderator" | "user"
+      tip_status: "pending" | "won" | "lost" | "void"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +333,9 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "moderator", "user"],
+      tip_status: ["pending", "won", "lost", "void"],
+    },
   },
 } as const
