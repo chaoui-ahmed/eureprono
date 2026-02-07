@@ -2,8 +2,9 @@ import { ReactNode } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
-import { TrendingUp, Trophy, LayoutDashboard, LogOut, Menu, X } from "lucide-react";
+import { Trophy, LayoutDashboard, LogOut, Menu, X } from "lucide-react";
 import { useState } from "react";
+import logo from "@/assets/logo.png";
 
 const Layout = ({ children }: { children: ReactNode }) => {
   const { user, signOut, isModerator } = useAuth();
@@ -11,7 +12,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const links = [
-    { to: "/", label: "Tips Feed", icon: TrendingUp },
+    { to: "/", label: "Tips Feed", icon: Trophy },
     { to: "/leaderboard", label: "Leaderboard", icon: Trophy },
     ...(isModerator ? [{ to: "/dashboard", label: "Dashboard", icon: LayoutDashboard }] : []),
   ];
@@ -23,10 +24,8 @@ const Layout = ({ children }: { children: ReactNode }) => {
       <header className="sticky top-0 z-50 border-b border-border bg-card/80 backdrop-blur-sm">
         <div className="container flex h-16 items-center justify-between">
           <Link to="/" className="flex items-center gap-2 font-bold text-xl">
-            <div className="flex h-8 w-8 items-center justify-center rounded-md bg-primary">
-              <TrendingUp className="h-4 w-4 text-primary-foreground" />
-            </div>
-            <span>BetWise</span>
+            <img src={logo} alt="EureProno" className="h-8 w-8 object-contain" />
+            <span>EureProno</span>
           </Link>
 
           <nav className="hidden md:flex items-center gap-1">
