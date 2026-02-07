@@ -8,6 +8,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
 import { z } from "zod";
 import { TrendingUp } from "lucide-react";
+import { lovable } from "@/integrations/lovable/index";
+import { Separator } from "@/components/ui/separator";
 
 const loginSchema = z.object({
   email: z.string().trim().email("Invalid email"),
@@ -25,6 +27,7 @@ const Auth = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
+  const [oauthLoading, setOauthLoading] = useState(false);
 
   if (user) {
     navigate("/");
@@ -68,6 +71,17 @@ const Auth = () => {
     }
   };
 
+  const handleAppleSignIn = async () => {
+    setOauthLoading(true);
+    const { error } = await lovable.auth.signInWithOAuth("apple", {
+      redirect_uri: window.location.origin,
+    });
+    setOauthLoading(false);
+    if (error) {
+      toast.error(error.message || "Apple sign-in failed");
+    }
+  };
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-background p-4">
       <Card className="w-full max-w-md">
@@ -100,6 +114,23 @@ const Auth = () => {
               </form>
             </TabsContent>
           </Tabs>
+          <div className="relative my-4">
+            <Separator />
+            <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-card px-2 text-xs text-muted-foreground">
+              or
+            </span>
+          </div>
+          <Button
+            variant="outline"
+            className="w-full gap-2"
+            onClick={handleAppleSignIn}
+            disabled={oauthLoading}
+          >
+            <svg viewBox="0 0 24 24" className="h-5 w-5" fill="currentColor">
+              <path d="M17.05 20.28c-.98.95-2.05.88-3.08.4-1.09-.5-2.08-.48-3.24 0-1.44.62-2.2.44-3.06-.4C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z" />
+            </svg>
+            {oauthLoading ? "Signing in..." : "Continue with Apple"}
+          </Button>
         </CardContent>
       </Card>
     </div>
